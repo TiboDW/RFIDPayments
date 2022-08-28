@@ -7,7 +7,7 @@
 
 ## Toegangs regels:
 
-als ‘<rol> kan ik <een actie uitvoeren>’
+als <rol> kan ik <een actie uitvoeren>
 
 Admin:
 
@@ -106,3 +106,87 @@ In het programma is er niks dat een dos aanval zou tegen gaan. Dit programma is 
 Elevation of privilege threat. 
 
 In het programma wordt er gebruik gemaakt van rollen/permissions om deze threat tegen te gaan. Deze threat hangt wel samen met de spoofing threat. Als spoofing succesvol is dan kan de aanvaller ook zichzelf verschillende rollen geven. Als aanpak raden we aan om dit te accepteren. Het werken met rollen is genoeg om deze threat tegen te gaan.
+ 
+ # security evaluatie
+
+## De gebruikte test tools:
+
+- DAST
+    - owasp ZAP: werd toegepast om de meest voorkomende Owasp vulnerabilities te controleren.
+ 
+    ![Untitled](https://user-images.githubusercontent.com/48216176/187092324-1ef56250-36cd-46f8-a631-3769030a17f3.png)
+
+- SAST
+    - semgrep: heeft geen findings gevonden. Werd toegepast om de source code te testen op potentiele vulnerabilities.
+ 
+    ![Untitled 1](https://user-images.githubusercontent.com/48216176/187092334-1e0d6390-6ec6-4945-ba33-136c65e2a60d.png)
+
+    
+    
+    - sonarQube: faalde om te runnen
+    
+    ![Untitled 2](https://user-images.githubusercontent.com/48216176/187092371-5275fad6-e27c-45f2-8bff-b5a4d5cc4a86.png)
+    ![Untitled 3](https://user-images.githubusercontent.com/48216176/187092378-688c5e71-2f44-4940-901e-1094572220cf.png)
+
+    
+    - snyke werkte niet zonder composer (composer werd niet gebruikt in dit php project)
+
+- SCA: Werd toegepast om vulnerabilities in de open source code te vinden.
+    - dependabot: vond geen fouten want er wordt geen gebruik gemaakt van NPM dependancies
+    
+    ## De evaluatie
+    
+    **Bij de opdracht security werden volgende bevindingen gedaan:**
+    
+    - Spoofing:
+        - threat: critical
+        - oplossing: het installeren van authenticatie software zoals Oauth of multi-factor authentication zoals 2-step verification van google.
+    - Tampering
+        - threat: high
+        - oplossing: Meer encryption toepassen
+    - Repudiation
+        - threat: low
+        - oplossing: Het gebruik van logging. Dit wordt al toegepast in het programma
+    - Information disclosure
+        - threat:  medium
+        - oplossing: Inlog gegevens encypteren. Het wachtwoord word geëncrypteerd bij het maken van een user
+    - Denial of Service
+        - threat: medium
+        - oplossing: In de vereisten word aan geraken om dit zo te laten. Moest er toch een tijd komen dat dit programma om het web zou draaien raden we aan om een om een tussen programma te installeren dat helpt met mitigation en load balancing (bv. cloudflair)
+    - Elevation of Privilege
+        - threat: medium
+        - oplossing: Er word gebruik gemaakt van rollen is het programma. Dit zou een goed genoeg verdediging moeten zijn tegen elevation of privilege.
+        
+    
+    **Bij de evaluatie van ivm wachtwoorden werden volgende bevindingen gedaan:**
+    
+    - Bij het registeren van de gebruiker
+        - is er geen limiet op de grootte van het wachtwoord.
+        - er werd niet gechecket of een nieuw wachtwoord voorkomt in een databreach
+    - Bij het aanmelden.
+        - kan de gebruiker zijn of haar wachtwoord rechtsreek kopieren uit een wachtwoord manager.
+    - toepassing verdediging van bruteforce or credential stuffing attacks
+        - Er is momenteel geen verdediging tegen brute force attacks
+    
+    Mogelijk oplossing hier voor.
+    
+    - limieten zetten voor de grote van de wachtwoorden
+    - het gebruik van multi factor authentication voor bruteforce attack
+    - het gebruik van een cooldown timer voor bruteforce attacks
+    
+    **Bij de evaluaties van het afdwingen de toegangs regels werden volgende bevindingen gedaan:** 
+    
+    De toegangs regels worden in het programma correct afgedwongen. Als is er wel een threat met spoofing. Dit is een gemakkelijke manier om de huidige toegangs regels te omzeilen. Hiervoor zou best een authentication software voor gebruikt worden.
+    
+    **Bij de evaluatie ivm HTTPS werden volgende bevindingen gedaan.** 
+    
+    HTTPS wordt niet toegepast omdat dit programma bedoelt is om te draaien om het privé netwerk van Erasmus hogeschool Brussel. Zoals je kan zien bij de Owasp analyse zijn de headers niet correct
+    
+    **Bij de evaluatie ivm beveiliging tegen typische web vulnerabilities:**
+    
+    - Er wordt geen gebruik gemaakt van CSRF tokens om CSRF attacks tegen te gaan.
+    - Er wordt geen gebruik gemaakt van cookies, alleen sessions.
+    - Er wordt geen gebruik gemaakt van escaping en output encoding om XSS tegen te gaan.
+    - Er wordt geen gebruikt gemaakt van CSP.
+ 
+ 
